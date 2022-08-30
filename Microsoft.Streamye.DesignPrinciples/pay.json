@@ -2,15 +2,15 @@
   "payType":[
     {
       "Key":"MS",
-      "Value": "Microsoft.Streamye.DesignPattern.DesignPrinciples.DependencyInverse.MSPay"
+      "Value": "Microsoft.Streamye.DesignPrinciples.DependencyInverse.MSPay"
     },
     {
       "Key":"WX",
-      "Value": "Microsoft.Streamye.DesignPattern.DesignPrinciples.DependencyInverse.WXPay"
+      "Value": "Microsoft.Streamye.DesignPrinciples.DependencyInverse.WXPay"
     },
     {
       "Key":"Ali",
-      "Value": "Microsoft.Streamye.DesignPattern.DesignPrinciples.DependencyInverse.AliPay"
+      "Value": "Microsoft.Streamye.DesignPrinciples.DependencyInverse.AliPay"
     }
   ]
 }

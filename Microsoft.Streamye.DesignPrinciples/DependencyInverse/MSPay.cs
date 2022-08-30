@@ -1,6 +1,6 @@
 using System;
 
-namespace Microsoft.Streamye.DesignPattern.DesignPrinciples.DependencyInverse
+namespace Microsoft.Streamye.DesignPrinciples.DependencyInverse
 {
     public class MSPay: IPay
     {

@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Configuration;
-using Microsoft.Streamye.DesignPattern.DesignPrinciples.DependencyInverse;
+using Microsoft.Streamye.DesignPrinciples.DependencyInverse;
 using Microsoft.Streamye.DesignPrinciples.OpenClose;
 
 namespace Microsoft.Streamye.DesignPrinciples.DemeteRule
@@ -18,13 +18,13 @@ namespace Microsoft.Streamye.DesignPrinciples.DemeteRule
         private IPay _ipay = new AliPay();
         
         private PayFactory _payFactory;
-        EBusiness(IConfiguration configuration,PayFactory payFactory)
+        public EBusiness(PayFactory payFactory)
         {
             _payFactory = payFactory;
         }
         
-        // public void BuyGoods(string payType)
-        public void BuyGoods()
+        public void BuyGoods(string payType)
+        // public void BuyGoods()
         {
             _product.ChooseProduct();
             
@@ -32,7 +32,7 @@ namespace Microsoft.Streamye.DesignPrinciples.DemeteRule
             
             _stock.SubStock();
             
-            _ipay.CreatePay();
+            // _ipay.CreatePay();
             
             // _aliPay.CreatePay();
             // _wxPay.CreatePay();
@@ -40,7 +40,7 @@ namespace Microsoft.Streamye.DesignPrinciples.DemeteRule
 
             //_payFactory.GetPay("WX");
 
-            //_payFactory.GetPay(payType);
+            _payFactory.GetPay(payType).CreatePay();
         }
     }
 }

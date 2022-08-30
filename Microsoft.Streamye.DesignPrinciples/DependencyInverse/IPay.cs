@@ -1,4 +1,4 @@
-namespace Microsoft.Streamye.DesignPattern.DesignPrinciples.DependencyInverse
+namespace Microsoft.Streamye.DesignPrinciples.DependencyInverse
 {
     public interface IPay
     {

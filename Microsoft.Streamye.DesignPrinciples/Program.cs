@@ -35,15 +35,15 @@ namespace Microsoft.Streamye.DesignPrinciples
             var configurationRoot = configBuilder.Build();
 
             var services = new ServiceCollection();
+            services.AddSingleton<IConfiguration>(configurationRoot);
             services.AddSingleton<PayFactory>();
             services.AddSingleton<EBusiness>();
-            services.AddSingleton<IConfiguration>(configurationRoot);
+            
 
             var serviceProvider=services.BuildServiceProvider();
 
-            var shapeFactory= serviceProvider.GetService<PayFactory>();
             var eBusiness = serviceProvider.GetService<EBusiness>();
-            //eBusiness.BuyGoods("WX");
+            eBusiness.BuyGoods("WX");
 
             #endregion
            

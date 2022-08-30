@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Streamye.DesignPattern.DesignPrinciples.DependencyInverse;
+using Microsoft.Streamye.DesignPrinciples.DependencyInverse;
 
 namespace Microsoft.Streamye.DesignPrinciples.OpenClose
 {
