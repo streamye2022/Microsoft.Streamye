@@ -9,6 +9,8 @@ namespace Microsoft.Streamye.DesignPattern
     {
         static void Main(string[] args)
         {
+
+            #region 工厂模式
             var configBuilder = new ConfigurationBuilder();
             configBuilder.AddJsonFile("shape.json", false, true);
             var configurationRoot = configBuilder.Build();
@@ -21,6 +23,9 @@ namespace Microsoft.Streamye.DesignPattern
 
             var shapeFactory= serviceProvider.GetService<ShapeFactory>();
             shapeFactory.getShage("circle").Draw();
+            #endregion
+           
         }
+        
     }
 }
