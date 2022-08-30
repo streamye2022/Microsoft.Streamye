@@ -1,4 +1,7 @@
 ﻿using System;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Streamye.DesignPattern.Factory;
 
 namespace Microsoft.Streamye.DesignPattern
 {
@@ -6,7 +9,18 @@ namespace Microsoft.Streamye.DesignPattern
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var configBuilder = new ConfigurationBuilder();
+            configBuilder.AddJsonFile("shape.json", false, true);
+            var configurationRoot = configBuilder.Build();
+
+            var services = new ServiceCollection();
+            services.AddSingleton<ShapeFactory>();
+            services.AddSingleton<IConfiguration>(configurationRoot);
+
+            var serviceProvider=services.BuildServiceProvider();
+
+            var shapeFactory= serviceProvider.GetService<ShapeFactory>();
+            shapeFactory.getShage("circle").Draw();
         }
     }
 }

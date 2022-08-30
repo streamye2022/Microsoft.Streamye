@@ -1,0 +1,17 @@
+{
+  "shapes":[
+    {
+      "Key":"circle",
+      "Value": "Microsoft.Streamye.DesignPattern.Factory.Shapes.Circle"
+    },
+    {
+      "Key":"rectangle",
+      "Value": "Microsoft.Streamye.DesignPattern.Factory.Shapes.Rectangle"
+    },
+    {
+      "Key":"square",
+      "Value": "Microsoft.Streamye.DesignPattern.Factory.Shapes.Square"
+    }
+  ],
+  "test":"test"
+}
