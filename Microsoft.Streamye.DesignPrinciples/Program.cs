@@ -2,7 +2,9 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Streamye.DesignPrinciples.DemeteRule;
-using Microsoft.Streamye.DesignPrinciples.OpenClose;
+using Microsoft.Streamye.DesignPrinciples.InterfaceIsolation;
+using Microsoft.Streamye.DesignPrinciples.liskovSub;
+using PayFactory = Microsoft.Streamye.DesignPrinciples.OpenClose.PayFactory;
 
 namespace Microsoft.Streamye.DesignPrinciples
 {
@@ -45,8 +47,29 @@ namespace Microsoft.Streamye.DesignPrinciples
             var eBusiness = serviceProvider.GetService<EBusiness>();
             eBusiness.BuyGoods("WX");
 
+            // 问题：我想给IPay加一个功能：统计每个支付的调用量
+            // 给Ipay加一个功能，但是MS pay 不想提供这个功能
             #endregion
-           
+
+            #region 接口隔离 ,定义的是一种行为规范
+            IPayCount payCount = new WXPay();
+            payCount.PayCount();
+            
+            // 问题：再加一个功能，统计所有的pay的调用次数
+            // 工厂类中加一个功能，1. 直接在工厂中加 2.拓展一个新CountPayFactory
+
+            #endregion
+
+            #region 里氏替换
+            //   1.直接在代码中写   2.继承：存在重写的风险  3. 用组合方式的装饰器模式
+
+            // liskovSub.PayFactory payFactory = new liskovSub.PayFactory(configurationRoot);
+            liskovSub.PayFactory payFactory = new CountPayFactory(configurationRoot);
+            payFactory.GetPay("WX").CreatePay();
+            // countPayFactory.PayCount("WX");
+
+            #endregion
+
         }
         static void ChooseProduct()
         {
