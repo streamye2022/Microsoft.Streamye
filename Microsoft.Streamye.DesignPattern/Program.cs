@@ -92,7 +92,7 @@ namespace Microsoft.Streamye.DesignPattern
             IPay pay = new CMDPay();
             // pay.Pay();
             //问题：想添加pay完之后 发送短信的功能，不仅发送短信还想发送 邮件
-            //两种方案： 1.继承方式（会有里氏替换问题） 2.组合方式 3.C#独有的拓展方法
+            //两种方案： 1.继承方式（会有里氏替换问题） 2.组合方式 3.C#独有的拓展方法 4.代理模式
 
             IPay pay1 = new SmsCMDPayDecorator(pay);
             pay1.Pay(); //组合方式：没有覆盖父类，额外的好处：如果又想发短信，又想发邮件
@@ -106,6 +106,12 @@ namespace Microsoft.Streamye.DesignPattern
 
             //问题：
             //实例：IServiceCollection, IApplicationBuilder
+
+            #endregion
+
+            #region 代理模式
+
+            //问题：与装饰器模式的区别，不希望暴露底层的实现, 而且可以加强多个对象的功能， 而装饰器更希望自由组装
 
             #endregion
         }
