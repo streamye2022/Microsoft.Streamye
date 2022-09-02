@@ -69,7 +69,7 @@ namespace Microsoft.Streamye.DesignPattern
             Computer computer1 = computerBuilder.BuildMemory().BuildFrame().BuildCPU().Build();
             //何时用抽象类或者接口？ 1.一般关注对象，则用抽象类（CPU,Memory,Frame） 2.如果不关心对象的属性，只关心对象的行为，用接口；
             
-            // 真实案例：
+            // 真实案例：IConfigurationBuilder
             IConfigurationBuilder Builder = new ConfigurationBuilder();
             // 加载json文件
             // 好处：
@@ -78,6 +78,8 @@ namespace Microsoft.Streamye.DesignPattern
             Builder.AddJsonFile("appsettings.json");
             // 创建配置对象
             IConfiguration configuration = Builder.Build();
+            
+            //其他案例：
             //IHostBuilder
             //IApplicationBuilder
 
