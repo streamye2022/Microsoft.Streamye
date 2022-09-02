@@ -16,7 +16,10 @@ namespace Microsoft.Streamye.DesignPattern.Chain.Manager
             }
             
             // _abstractManager.AuditProduct(request);
-            NextAbstractManager.AuditProduct(request);
+            if (null != NextAbstractManager)
+            {
+                NextAbstractManager.AuditProduct(request);
+            }
         }
     }
 }

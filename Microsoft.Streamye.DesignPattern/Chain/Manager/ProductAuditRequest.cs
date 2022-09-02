@@ -4,6 +4,6 @@ namespace Microsoft.Streamye.DesignPattern.Chain.Manager
     {
         public int Money;
 
-        public int ProductName;
+        public string ProductName;
     }
 }

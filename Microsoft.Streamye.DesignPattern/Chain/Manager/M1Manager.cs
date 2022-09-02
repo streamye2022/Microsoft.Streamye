@@ -2,7 +2,7 @@ using System;
 
 namespace Microsoft.Streamye.DesignPattern.Chain.Manager
 {
-    public class M1AbstractManager: AbstractManager
+    public class M1Manager: AbstractManager
     {
         private int HandleMoney = 1000 * 1000;
 
@@ -16,7 +16,10 @@ namespace Microsoft.Streamye.DesignPattern.Chain.Manager
             }
             
             // _abstractManager.AuditProduct(request);
-            NextAbstractManager.AuditProduct(request);
+            if (null != NextAbstractManager)
+            {
+                NextAbstractManager.AuditProduct(request);
+            }
         }
     }
 }

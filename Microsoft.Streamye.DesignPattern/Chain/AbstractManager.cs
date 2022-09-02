@@ -1,4 +1,6 @@
-namespace Microsoft.Streamye.DesignPattern.Chain.Manager
+using Microsoft.Streamye.DesignPattern.Chain.Manager;
+
+namespace Microsoft.Streamye.DesignPattern.Chain
 {
     public abstract class AbstractManager
     {

@@ -2,16 +2,14 @@ using System;
 
 namespace Microsoft.Streamye.DesignPattern.Chain.Manager
 {
-    public class CvpManager : AbstractManager
+    public class EVPManager : AbstractManager
     {
-        private int HandleMoney = 1000 * 1000 * 100;
-
-        // private AbstractManager _abstractManager;
+        private int HandleMoney = 1000 * 1000 * 1000;
         public override void AuditProduct(ProductAuditRequest request)
         {
             if (request.Money <= HandleMoney)
             {
-                Console.WriteLine("CVP audit success");
+                Console.WriteLine("EVP audit success");
                 return;
             }
             

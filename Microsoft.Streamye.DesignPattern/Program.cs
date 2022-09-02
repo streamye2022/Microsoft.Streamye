@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Streamye.DesignPattern.Builder;
 using Microsoft.Streamye.DesignPattern.Builder.component;
 using Microsoft.Streamye.DesignPattern.Builder.component.Impl;
+using Microsoft.Streamye.DesignPattern.Chain;
+using Microsoft.Streamye.DesignPattern.Chain.Manager;
 using Microsoft.Streamye.DesignPattern.Decorator;
 using Microsoft.Streamye.DesignPattern.Decorator.Impl;
 using Microsoft.Streamye.DesignPattern.Factory;
@@ -86,34 +88,75 @@ namespace Microsoft.Streamye.DesignPattern
             // //IApplicationBuilder
             //
             // #endregion
+            //
+            // #region 装饰器模式
+            //
+            // IPay pay = new CMDPay();
+            // // pay.Pay();
+            // //问题：想添加pay完之后 发送短信的功能，不仅发送短信还想发送 邮件
+            // //两种方案： 1.继承方式（会有里氏替换问题） 2.组合方式 3.C#独有的拓展方法 4.代理模式
+            //
+            // IPay pay1 = new SmsCMDPayDecorator(pay);
+            // pay1.Pay(); //组合方式：没有覆盖父类，额外的好处：如果又想发短信，又想发邮件
+            //
+            // IPay pay2 = new MailCMDPayDecorator(pay1); //这种组合的方式
+            // pay2.Pay(); 
+            //
+            // // C#拓展
+            // pay.SendSms();
+            // // pay.SendMail();
+            //
+            // //问题：
+            // //实例：IServiceCollection, IApplicationBuilder
+            //
+            // #endregion
 
-            #region 装饰器模式
+            // #region 代理模式
+            //
+            // //问题：与装饰器模式的区别，不希望暴露底层的实现, 而且可以加强多个对象的功能， 而装饰器更希望自由组装
+            //
+            // #endregion
 
-            IPay pay = new CMDPay();
-            // pay.Pay();
-            //问题：想添加pay完之后 发送短信的功能，不仅发送短信还想发送 邮件
-            //两种方案： 1.继承方式（会有里氏替换问题） 2.组合方式 3.C#独有的拓展方法 4.代理模式
+            #region 责任链模式
 
-            IPay pay1 = new SmsCMDPayDecorator(pay);
-            pay1.Pay(); //组合方式：没有覆盖父类，额外的好处：如果又想发短信，又想发邮件
+            M1Manager m1Manager = new M1Manager();
+            M2Manager m2Manager = new M2Manager();
+            CvpManager cvpManager = new CvpManager();
             
-            IPay pay2 = new MailCMDPayDecorator(pay1); //这种组合的方式
-            pay2.Pay(); 
-            
-            // C#拓展
-            pay.SendSms();
-            // pay.SendMail();
+            //形成责任链
+            m1Manager.NextAbstractManager = m2Manager;
+            m2Manager.NextAbstractManager = cvpManager;
 
-            //问题：
-            //实例：IServiceCollection, IApplicationBuilder
+            ProductAuditRequest request = new ProductAuditRequest();
+            request.Money = 1000*1000*5;
+            request.ProductName = "canon";
+            
+            // m1Manager.AuditProduct(request);
+            
+            //问题：1. 如果新增一个处理器，则客户端代码得改 =》 List
+            //真实情况类似：A权限校验， B权限校验， C权限校验 
+
+            ProductAuditBuilder productAuditBuilder = new ProductAuditBuilder();
+            productAuditBuilder.AddM1Manager();
+            productAuditBuilder.AddManager(m2Manager);
+            productAuditBuilder.AddManager(cvpManager);
+            
+            //两种拓展的方法 ： 1. client中修改 2. Extension中拓展 ，真实的是在 IOC容器里面拿的对象
+            // productAuditBuilder.AddManager(new EVPManager());
+            productAuditBuilder.AddEVPManager(); 
+            
+            
+            //
+            ProductAudit productAudit = productAuditBuilder.Build();
+            AbstractManager abstractManager = productAudit.GetManager();
+
+            request.Money = 1000*1000*500;
+            request.ProductName = "canon2";
+            abstractManager.AuditProduct(request);
+
 
             #endregion
 
-            #region 代理模式
-
-            //问题：与装饰器模式的区别，不希望暴露底层的实现, 而且可以加强多个对象的功能， 而装饰器更希望自由组装
-
-            #endregion
         }
         
     }
