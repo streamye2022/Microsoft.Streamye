@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Streamye.DesignPattern.Builder;
 using Microsoft.Streamye.DesignPattern.Builder.component;
 using Microsoft.Streamye.DesignPattern.Builder.component.Impl;
+using Microsoft.Streamye.DesignPattern.Decorator;
+using Microsoft.Streamye.DesignPattern.Decorator.Impl;
 using Microsoft.Streamye.DesignPattern.Factory;
 using Microsoft.Streamye.DesignPattern.IOC;
 using Microsoft.Streamye.DesignPattern.IOC.Services;
@@ -44,44 +46,72 @@ namespace Microsoft.Streamye.DesignPattern
             //
             // #endregion
 
-            #region IOC容器
+            // #region IOC容器
+            //
+            // IOCFactory iocFactory = new IOCFactory();
+            // Object o = iocFactory.GetObject<Canon>();
+            //
+            // #endregion
 
-            IOCFactory iocFactory = new IOCFactory();
-            Object o = iocFactory.GetObject<Canon>();
+            // #region 构造者模式
+            //     
+            // //正常操作：
+            // AbstractCPU cpu = new MSCPU();
+            // //AbstractCPU cpu = new MSCPU(arg1,arg2,arg3...arg10);
+            // AbstractFrame frame = new MSFrame();
+            // AbstractMemory memory = new MSMemory();
+            // Computer computer = new Computer();
+            // computer.Cpu = cpu;
+            // computer.Frame = frame;
+            // computer.Memory = memory;
+            // //问题：1.客户端代码会非常多，如果cpu和frame和memory都需要10个零部件，那么这段代码就会非常复杂 =》 封装
+            //
+            //
+            // IComputerBuilder computerBuilder = new ComputerBuilder();
+            // Computer computer1 = computerBuilder.BuildMemory().BuildFrame().BuildCPU().Build();
+            // //何时用抽象类或者接口？ 1.一般关注对象，则用抽象类（CPU,Memory,Frame） 2.如果不关心对象的属性，只关心对象的行为，用接口；
+            //
+            // // 真实案例：IConfigurationBuilder
+            // IConfigurationBuilder Builder = new ConfigurationBuilder();
+            // // 加载json文件
+            // // 好处：
+            // // 1.json,xml,ini,我都不care,而且你完全自己的实现自己的代码，跟我的IConfigurationBuilder丝毫没有耦合
+            // // 2.如果json的实现有多复杂，那是json的 JsonConfigurationProvider的问题
+            // Builder.AddJsonFile("appsettings.json");
+            // // 创建配置对象
+            // IConfiguration configuration = Builder.Build();
+            //
+            // //其他案例：
+            // //IHostBuilder
+            // //IApplicationBuilder
+            //
+            // #endregion
+
+            #region 装饰器模式
+
+            IPay pay = new CMDPay();
+            // pay.Pay();
+            //问题：想添加pay完之后 发送短信的功能，不仅发送短信还想发送 邮件
+            //两种方案： 1.继承方式（会有里氏替换问题） 2.组合方式 3.C#独有的拓展方法 4.代理模式
+
+            IPay pay1 = new SmsCMDPayDecorator(pay);
+            pay1.Pay(); //组合方式：没有覆盖父类，额外的好处：如果又想发短信，又想发邮件
+            
+            IPay pay2 = new MailCMDPayDecorator(pay1); //这种组合的方式
+            pay2.Pay(); 
+            
+            // C#拓展
+            pay.SendSms();
+            // pay.SendMail();
+
+            //问题：
+            //实例：IServiceCollection, IApplicationBuilder
 
             #endregion
 
-            #region 构造者模式
-                
-            //正常操作：
-            AbstractCPU cpu = new MSCPU();
-            //AbstractCPU cpu = new MSCPU(arg1,arg2,arg3...arg10);
-            AbstractFrame frame = new MSFrame();
-            AbstractMemory memory = new MSMemory();
-            Computer computer = new Computer();
-            computer.Cpu = cpu;
-            computer.Frame = frame;
-            computer.Memory = memory;
-            //问题：1.客户端代码会非常多，如果cpu和frame和memory都需要10个零部件，那么这段代码就会非常复杂 =》 封装
-            
-            
-            IComputerBuilder computerBuilder = new ComputerBuilder();
-            Computer computer1 = computerBuilder.BuildMemory().BuildFrame().BuildCPU().Build();
-            //何时用抽象类或者接口？ 1.一般关注对象，则用抽象类（CPU,Memory,Frame） 2.如果不关心对象的属性，只关心对象的行为，用接口；
-            
-            // 真实案例：IConfigurationBuilder
-            IConfigurationBuilder Builder = new ConfigurationBuilder();
-            // 加载json文件
-            // 好处：
-            // 1.json,xml,ini,我都不care,而且你完全自己的实现自己的代码，跟我的IConfigurationBuilder丝毫没有耦合
-            // 2.如果json的实现有多复杂，那是json的 JsonConfigurationProvider的问题
-            Builder.AddJsonFile("appsettings.json");
-            // 创建配置对象
-            IConfiguration configuration = Builder.Build();
-            
-            //其他案例：
-            //IHostBuilder
-            //IApplicationBuilder
+            #region 代理模式
+
+            //问题：与装饰器模式的区别，不希望暴露底层的实现, 而且可以加强多个对象的功能， 而装饰器更希望自由组装
 
             #endregion
         }
