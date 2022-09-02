@@ -145,8 +145,6 @@ namespace Microsoft.Streamye.DesignPattern
             // productAuditBuilder.AddManager(new EVPManager());
             productAuditBuilder.AddEVPManager(); 
             
-            
-            //
             ProductAudit productAudit = productAuditBuilder.Build();
             AbstractManager abstractManager = productAudit.GetManager();
 
@@ -154,6 +152,7 @@ namespace Microsoft.Streamye.DesignPattern
             request.ProductName = "canon2";
             abstractManager.AuditProduct(request);
 
+            //问题：1.why 需要builder来做？ 
 
             #endregion
 
