@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Streamye.DesignPattern.Builder;
@@ -164,19 +167,29 @@ namespace Microsoft.Streamye.DesignPattern
             #region 迭代器模式
             //目的：1.不想暴露内部结构（这一点跟代理模式一样） 2. 统一访问方法，不管你是map,list, array 
 
-            List list = new List();
-            string[] names = list.GetNames();
+            // List list = new List();
+            // string[] names = list.GetNames();
+            //
+            // foreach (var name in names)
+            // {
+            //     Console.WriteLine("name:"+name);
+            // }
+            //
+            // //iterator方式访问
+            // IIterator iterator = list.GetIterator();
+            // while (iterator.HasNext())
+            // {
+            //     Console.WriteLine("name:"+iterator.Next());
+            // }
 
-            foreach (var name in names)
+            //
+            IDictionary<string,string> dictionary = new Dictionary<string,string>();
+            dictionary["AA"] = "zhangsan";
+            dictionary["BB"] = "lisi";
+            IEnumerator enumerator = dictionary.GetEnumerator();
+            while (enumerator.MoveNext())
             {
-                Console.WriteLine("name:"+name);
-            }
-
-            //iterator方式访问
-            IIterator iterator = list.GetIterator();
-            while (iterator.HasNext())
-            {
-                Console.WriteLine("name:"+iterator.Next());
+                Console.WriteLine(enumerator.Current);
             }
 
             #endregion
