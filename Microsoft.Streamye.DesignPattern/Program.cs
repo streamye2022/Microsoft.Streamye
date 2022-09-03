@@ -317,6 +317,7 @@ namespace Microsoft.Streamye.DesignPattern
             //问题baby生病也想通知别人
             baby.Health = "生病";
             
+            //如果
             #endregion
         }
         
