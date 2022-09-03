@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Streamye.DesignPattern.Builder;
@@ -19,8 +20,11 @@ using Microsoft.Streamye.DesignPattern.Iterator.Impl;
 using Microsoft.Streamye.DesignPattern.Strategy;
 using Microsoft.Streamye.DesignPattern.Template;
 using Microsoft.Streamye.DesignPattern.Template.Impl;
+using Microsoft.Streamye.DesignPattern.WebAPI;
+using Microsoft.Streamye.DesignPattern.WebAPI.Facade;
 using Microsoft.Streamye.DesignPattern.WebApiMiddleware;
 using Microsoft.Streamye.DesignPattern.WebApiMiddleware.Chains;
+using HttpContext = Microsoft.Streamye.DesignPattern.WebAPI.HttpContext;
 
 namespace Microsoft.Streamye.DesignPattern
 {
@@ -230,11 +234,58 @@ namespace Microsoft.Streamye.DesignPattern
             // cloudServer.SaveLog();
             
             //再封一下，封装个工厂
-            ICloudServer cloudServer1 = CloudServerFactory.GetCloudServer("kusto");
-            cloudServer1.SaveLog();
+            // ICloudServer cloudServer1 = CloudServerFactory.GetCloudServer("kusto");
+            // cloudServer1.SaveLog();
             
             #endregion
 
+            #region webapi
+            //获得类型
+            Type type = typeof(CanaryCheckController);
+            //创建对象
+            Object o = Activator.CreateInstance(type);
+            //获得方法
+            MethodInfo methodInfo = type.GetMethod("CheckVM");
+            //调用方法
+            // methodInfo.Invoke(o, new object[] { });
+
+            //对上面进行封装
+            Endpoint endpoint = new Endpoint();
+            endpoint.Controller = o;
+            endpoint.methodInfo = methodInfo;
+            endpoint.parameterInfos = methodInfo.GetParameters();
+
+            EndpointHandler handler = new EndpointHandler();
+            handler.HandlerEndpoint(endpoint, new object[]{});
+
+            //问题：有很多个endpoint , 得全部加载好
+            // 1、构造endpoint集合
+            EndpointRouteBuilder endpointRouteBuilder = new EndpointRouteBuilder();
+            endpointRouteBuilder.MapControllers();
+            EndpointDataSources endpointDataSources = endpointRouteBuilder.Build();
+
+            // 2 路由匹配(路由中间件)
+            EndpointRoute endpointRoute = new EndpointRoute();
+            endpointRoute.endpointDataSources = endpointDataSources;
+            HttpContext httpContext = new HttpContext();
+            httpContext.requestUrl = "canary/checkvm";
+            Endpoint endpoint1 = endpointRoute.Match(httpContext);
+
+            // 3、执行端点
+            EndpointHandler endpointHandler = new EndpointHandler();
+            object result1 = endpointHandler.HandlerEndpoint(endpoint1, new object[] { });
+
+            // 4、把结果响应到客户端
+            // JSONView jSONView = new JSONView();
+            // jSONView.Render(result1, httpContext);*/
+            
+            
+            //问题：上面步骤再进行一次封装
+            EndpointMiddlewareFacade middlewareFacade = new EndpointMiddlewareFacade();
+            middlewareFacade.Invoke(httpContext);
+
+            //问题：再进一步，集合Iapplicationbuilder, 添加一个 UseEndpointMiddleware
+            #endregion
         }
         
     }
