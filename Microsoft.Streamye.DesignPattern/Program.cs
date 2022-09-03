@@ -17,6 +17,8 @@ using Microsoft.Streamye.DesignPattern.IOC.Services;
 using Microsoft.Streamye.DesignPattern.Iterator;
 using Microsoft.Streamye.DesignPattern.Iterator.Impl;
 using Microsoft.Streamye.DesignPattern.Strategy;
+using Microsoft.Streamye.DesignPattern.WebApiMiddleware;
+using Microsoft.Streamye.DesignPattern.WebApiMiddleware.Chains;
 
 namespace Microsoft.Streamye.DesignPattern
 {
@@ -183,17 +185,39 @@ namespace Microsoft.Streamye.DesignPattern
             // }
 
             //
-            IDictionary<string,string> dictionary = new Dictionary<string,string>();
-            dictionary["AA"] = "zhangsan";
-            dictionary["BB"] = "lisi";
-            IEnumerator enumerator = dictionary.GetEnumerator();
-            while (enumerator.MoveNext())
-            {
-                Console.WriteLine(enumerator.Current);
-            }
+            // IDictionary<string,string> dictionary = new Dictionary<string,string>();
+            // dictionary["AA"] = "zhangsan";
+            // dictionary["BB"] = "lisi";
+            // IEnumerator enumerator = dictionary.GetEnumerator();
+            // while (enumerator.MoveNext())
+            // {
+            //     Console.WriteLine(enumerator.Current);
+            // }
 
             #endregion
 
+            #region webApi middleware
+            //责任链的真实使用
+            //都是对httpcontext处理，返回也相同
+            
+            //假如不用builder
+            IApplication application = new IApplication();
+            AbstractMiddleware middleware1 = new AuthenticationMiddleware();
+            AbstractMiddleware middleware2 = new AuthorizationMiddleware();
+            application.AddMiddleware(middleware1);
+            application.AddMiddleware(middleware2);
+            AbstractMiddleware middleware = application.GetMiddleware();
+
+            HttpRequest request = new HttpRequest();
+            request.requestUrl = "microsoft.com";
+            middleware.HandleHttpRequest(request);
+
+            //使用applicationBuilder
+            IApplicationBuilder applicationBuilder = new IApplicationBuilder();
+            Startup startup = new Startup();
+            startup.Configure(applicationBuilder);
+
+            #endregion
 
         }
         
