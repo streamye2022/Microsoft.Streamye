@@ -17,6 +17,7 @@ using Microsoft.Streamye.DesignPattern.IOC;
 using Microsoft.Streamye.DesignPattern.IOC.Services;
 using Microsoft.Streamye.DesignPattern.Iterator;
 using Microsoft.Streamye.DesignPattern.Iterator.Impl;
+using Microsoft.Streamye.DesignPattern.Meditor.Group;
 using Microsoft.Streamye.DesignPattern.Observer;
 using Microsoft.Streamye.DesignPattern.Observer.Impl;
 using Microsoft.Streamye.DesignPattern.Strategy;
@@ -308,7 +309,7 @@ namespace Microsoft.Streamye.DesignPattern
 
 
             #region 观察者模式
-
+            //目的： 解决：1对多的通信问题
             // Baby baby = new Baby();
             // baby.AddObserver(new Parents());
             // baby.AddObserver(new GrandParents());
@@ -318,12 +319,30 @@ namespace Microsoft.Streamye.DesignPattern
             // baby.Health = "生病";
             
             //不想要Baby这种事件实体 =》 只有事件 ： EventBus 
-            EventBus eventBus = new EventBus();
-            eventBus.AddObserver(new GrandParentsEventHandler());
+            // EventBus eventBus = new EventBus();
+            // eventBus.AddObserver(new GrandParentsEventHandler());
+            //
+            // //构造事件：
+            // BabyCryEvent babyCryEvent = new BabyCryEvent("baby cry event");
+            // eventBus.PublishEvent(babyCryEvent);
+
+            #endregion
+
+            #region 中介模式
+
+            Student student = new Student();
+            Teacher teacher = new Teacher();
+            Parent parent = new Parent();
+            Meditor.Meditor meditor = new Meditor.Meditor();
+            meditor.AddPeople(student);
+            meditor.AddPeople(teacher);
+            meditor.AddPeople(parent);
+
+            student.Meditor = meditor;
+            teacher.Meditor = meditor;
+            parent.Meditor = meditor;
             
-            //构造事件：
-            BabyCryEvent babyCryEvent = new BabyCryEvent("baby cry event");
-            eventBus.PublishEvent(babyCryEvent);
+            student.Send("student say something");
 
             #endregion
         }
