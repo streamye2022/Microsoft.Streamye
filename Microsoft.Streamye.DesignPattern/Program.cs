@@ -309,15 +309,22 @@ namespace Microsoft.Streamye.DesignPattern
 
             #region 观察者模式
 
-            Baby baby = new Baby();
-            baby.AddObserver(new Parents());
-            baby.AddObserver(new GrandParents());
-            baby.Cry();
+            // Baby baby = new Baby();
+            // baby.AddObserver(new Parents());
+            // baby.AddObserver(new GrandParents());
+            // baby.Cry();
+            //
+            // //问题baby生病也想通知别人
+            // baby.Health = "生病";
             
-            //问题baby生病也想通知别人
-            baby.Health = "生病";
+            //不想要Baby这种事件实体 =》 只有事件 ： EventBus 
+            EventBus eventBus = new EventBus();
+            eventBus.AddObserver(new GrandParentsEventHandler());
             
-            //如果
+            //构造事件：
+            BabyCryEvent babyCryEvent = new BabyCryEvent("baby cry event");
+            eventBus.PublishEvent(babyCryEvent);
+
             #endregion
         }
         
