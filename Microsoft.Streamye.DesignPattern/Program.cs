@@ -17,6 +17,8 @@ using Microsoft.Streamye.DesignPattern.IOC;
 using Microsoft.Streamye.DesignPattern.IOC.Services;
 using Microsoft.Streamye.DesignPattern.Iterator;
 using Microsoft.Streamye.DesignPattern.Iterator.Impl;
+using Microsoft.Streamye.DesignPattern.Observer;
+using Microsoft.Streamye.DesignPattern.Observer.Impl;
 using Microsoft.Streamye.DesignPattern.Strategy;
 using Microsoft.Streamye.DesignPattern.Template;
 using Microsoft.Streamye.DesignPattern.Template.Impl;
@@ -297,11 +299,24 @@ namespace Microsoft.Streamye.DesignPattern
             //问题：客户端得改，违背开闭原则，如何从json文件中读取？ 会有不同的数据源：xml,ini,json
             //
             
-            ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
-            configurationBuilder.AddJsonFile("aa.json");
-            Configuration.Configuration configuration = configurationBuilder.Build();
-            Console.WriteLine(configuration["aaaa"]);
+            // ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+            // configurationBuilder.AddJsonFile("aa.json");
+            // Configuration.Configuration configuration = configurationBuilder.Build();
+            // Console.WriteLine(configuration["aaaa"]);
 
+            #endregion
+
+
+            #region 观察者模式
+
+            Baby baby = new Baby();
+            baby.AddObserver(new Parents());
+            baby.AddObserver(new GrandParents());
+            baby.Cry();
+            
+            //问题baby生病也想通知别人
+            baby.Health = "生病";
+            
             #endregion
         }
         
