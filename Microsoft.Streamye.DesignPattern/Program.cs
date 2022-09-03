@@ -11,6 +11,8 @@ using Microsoft.Streamye.DesignPattern.Decorator.Impl;
 using Microsoft.Streamye.DesignPattern.Factory;
 using Microsoft.Streamye.DesignPattern.IOC;
 using Microsoft.Streamye.DesignPattern.IOC.Services;
+using Microsoft.Streamye.DesignPattern.Iterator;
+using Microsoft.Streamye.DesignPattern.Iterator.Impl;
 using Microsoft.Streamye.DesignPattern.Strategy;
 
 namespace Microsoft.Streamye.DesignPattern
@@ -20,7 +22,8 @@ namespace Microsoft.Streamye.DesignPattern
         static void Main(string[] args)
         {
 
-            // #region 工厂模式
+            #region 工厂模式
+            { 
             // var configBuilder = new ConfigurationBuilder();
             // configBuilder.AddJsonFile("shape.json", false, true);
             // var configurationRoot = configBuilder.Build();
@@ -33,10 +36,11 @@ namespace Microsoft.Streamye.DesignPattern
             //
             // var shapeFactory= serviceProvider.GetService<ShapeFactory>();
             // shapeFactory.getShage("circle").Draw(); //1.命令行参数 2.配置文件中读
-            // #endregion
+            }
+            #endregion
 
-            // #region 策略模式
-            //
+            #region 策略模式
+            
             // IStrategy strategy = new AddStrategy();
             // Arithmetic arithmetic = new Arithmetic(strategy);
             // Console.WriteLine(arithmetic.doMath(5, 3));
@@ -46,17 +50,17 @@ namespace Microsoft.Streamye.DesignPattern
             // IStrategy strategy1 = strategyFactory.GetStrategy(args[1]); //命令行参数中读，或者配置文件中读
             // // Arithmetic arithmetic = new Arithmetic(strategy1);
             //
-            // #endregion
+            #endregion
 
-            // #region IOC容器
-            //
+            #region IOC容器
+            
             // IOCFactory iocFactory = new IOCFactory();
             // Object o = iocFactory.GetObject<Canon>();
             //
-            // #endregion
+            #endregion
 
-            // #region 构造者模式
-            //     
+            #region 构造者模式
+                
             // //正常操作：
             // AbstractCPU cpu = new MSCPU();
             // //AbstractCPU cpu = new MSCPU(arg1,arg2,arg3...arg10);
@@ -68,7 +72,7 @@ namespace Microsoft.Streamye.DesignPattern
             // computer.Memory = memory;
             // //问题：1.客户端代码会非常多，如果cpu和frame和memory都需要10个零部件，那么这段代码就会非常复杂 =》 封装
             //
-            //
+            
             // IComputerBuilder computerBuilder = new ComputerBuilder();
             // Computer computer1 = computerBuilder.BuildMemory().BuildFrame().BuildCPU().Build();
             // //何时用抽象类或者接口？ 1.一般关注对象，则用抽象类（CPU,Memory,Frame） 2.如果不关心对象的属性，只关心对象的行为，用接口；
@@ -82,15 +86,15 @@ namespace Microsoft.Streamye.DesignPattern
             // Builder.AddJsonFile("appsettings.json");
             // // 创建配置对象
             // IConfiguration configuration = Builder.Build();
-            //
-            // //其他案例：
-            // //IHostBuilder
-            // //IApplicationBuilder
-            //
-            // #endregion
-            //
-            // #region 装饰器模式
-            //
+            
+            // 其他案例：
+            // IHostBuilder
+            // IApplicationBuilder
+            
+            #endregion
+            
+            #region 装饰器模式
+            
             // IPay pay = new CMDPay();
             // // pay.Pay();
             // //问题：想添加pay完之后 发送短信的功能，不仅发送短信还想发送 邮件
@@ -108,53 +112,75 @@ namespace Microsoft.Streamye.DesignPattern
             //
             // //问题：
             // //实例：IServiceCollection, IApplicationBuilder
-            //
-            // #endregion
+            
+            #endregion
 
-            // #region 代理模式
+            #region 代理模式
             //
-            // //问题：与装饰器模式的区别，不希望暴露底层的实现, 而且可以加强多个对象的功能， 而装饰器更希望自由组装
+            // 问题：与装饰器模式的区别，不希望暴露底层的实现, 而且可以加强多个对象的功能， 而装饰器更希望自由组装
             //
-            // #endregion
+            #endregion
 
             #region 责任链模式
-
-            M1Manager m1Manager = new M1Manager();
-            M2Manager m2Manager = new M2Manager();
-            CvpManager cvpManager = new CvpManager();
-            
-            //形成责任链
-            m1Manager.NextAbstractManager = m2Manager;
-            m2Manager.NextAbstractManager = cvpManager;
-
-            ProductAuditRequest request = new ProductAuditRequest();
-            request.Money = 1000*1000*5;
-            request.ProductName = "canon";
-            
-            // m1Manager.AuditProduct(request);
-            
-            //问题：1. 如果新增一个处理器，则客户端代码得改 =》 List
-            //真实情况类似：A权限校验， B权限校验， C权限校验 
-
-            ProductAuditBuilder productAuditBuilder = new ProductAuditBuilder();
-            productAuditBuilder.AddM1Manager();
-            productAuditBuilder.AddManager(m2Manager);
-            productAuditBuilder.AddManager(cvpManager);
-            
-            //两种拓展的方法 ： 1. client中修改 2. Extension中拓展 ，真实的是在 IOC容器里面拿的对象
-            // productAuditBuilder.AddManager(new EVPManager());
-            productAuditBuilder.AddEVPManager(); 
-            
-            ProductAudit productAudit = productAuditBuilder.Build();
-            AbstractManager abstractManager = productAudit.GetManager();
-
-            request.Money = 1000*1000*500;
-            request.ProductName = "canon2";
-            abstractManager.AuditProduct(request);
-
-            //问题：1.why 需要builder来做？ 
+            //
+            // M1Manager m1Manager = new M1Manager();
+            // M2Manager m2Manager = new M2Manager();
+            // CvpManager cvpManager = new CvpManager();
+            //
+            // //形成责任链
+            // m1Manager.NextAbstractManager = m2Manager;
+            // m2Manager.NextAbstractManager = cvpManager;
+            //
+            // ProductAuditRequest request = new ProductAuditRequest();
+            // request.Money = 1000*1000*5;
+            // request.ProductName = "canon";
+            //
+            // // m1Manager.AuditProduct(request);
+            //
+            // //问题：1. 如果新增一个处理器，则客户端代码得改 =》 List
+            // //真实情况类似：A权限校验， B权限校验， C权限校验 
+            //
+            // ProductAuditBuilder productAuditBuilder = new ProductAuditBuilder();
+            // productAuditBuilder.AddM1Manager();
+            // productAuditBuilder.AddManager(m2Manager);
+            // productAuditBuilder.AddManager(cvpManager);
+            //
+            // //两种拓展的方法 ： 1. client中修改 2. Extension中拓展 ，真实的是在 IOC容器里面拿的对象
+            // // productAuditBuilder.AddManager(new EVPManager());
+            // productAuditBuilder.AddEVPManager(); 
+            //
+            // ProductAudit productAudit = productAuditBuilder.Build();
+            // AbstractManager abstractManager = productAudit.GetManager();
+            //
+            // request.Money = 1000*1000*500;
+            // request.ProductName = "canon2";
+            // abstractManager.AuditProduct(request);
+            //
+            // //问题：1.why 需要builder来做？  2.感觉所有的业务都可以这么做？
+            // //假如是同类型的行为，比如我都是权限校验！！
 
             #endregion
+
+            #region 迭代器模式
+            //目的：1.不想暴露内部结构（这一点跟代理模式一样） 2. 统一访问方法，不管你是map,list, array 
+
+            List list = new List();
+            string[] names = list.GetNames();
+
+            foreach (var name in names)
+            {
+                Console.WriteLine("name:"+name);
+            }
+
+            //iterator方式访问
+            IIterator iterator = list.GetIterator();
+            while (iterator.HasNext())
+            {
+                Console.WriteLine("name:"+iterator.Next());
+            }
+
+            #endregion
+
 
         }
         
