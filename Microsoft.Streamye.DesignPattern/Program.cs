@@ -17,6 +17,8 @@ using Microsoft.Streamye.DesignPattern.IOC.Services;
 using Microsoft.Streamye.DesignPattern.Iterator;
 using Microsoft.Streamye.DesignPattern.Iterator.Impl;
 using Microsoft.Streamye.DesignPattern.Strategy;
+using Microsoft.Streamye.DesignPattern.Template;
+using Microsoft.Streamye.DesignPattern.Template.Impl;
 using Microsoft.Streamye.DesignPattern.WebApiMiddleware;
 using Microsoft.Streamye.DesignPattern.WebApiMiddleware.Chains;
 
@@ -200,23 +202,37 @@ namespace Microsoft.Streamye.DesignPattern
             //责任链的真实使用
             //都是对httpcontext处理，返回也相同
             
-            //假如不用builder
-            IApplication application = new IApplication();
-            AbstractMiddleware middleware1 = new AuthenticationMiddleware();
-            AbstractMiddleware middleware2 = new AuthorizationMiddleware();
-            application.AddMiddleware(middleware1);
-            application.AddMiddleware(middleware2);
-            AbstractMiddleware middleware = application.GetMiddleware();
+            // //假如不用builder
+            // IApplication application = new IApplication();
+            // AbstractMiddleware middleware1 = new AuthenticationMiddleware();
+            // AbstractMiddleware middleware2 = new AuthorizationMiddleware();
+            // application.AddMiddleware(middleware1);
+            // application.AddMiddleware(middleware2);
+            // AbstractMiddleware middleware = application.GetMiddleware();
+            //
+            // HttpRequest request = new HttpRequest();
+            // request.requestUrl = "microsoft.com";
+            // middleware.HandleHttpRequest(request);
+            //
+            // //使用applicationBuilder
+            // IApplicationBuilder applicationBuilder = new IApplicationBuilder();
+            // Startup startup = new Startup();
+            // startup.Configure(applicationBuilder);
 
-            HttpRequest request = new HttpRequest();
-            request.requestUrl = "microsoft.com";
-            middleware.HandleHttpRequest(request);
+            #endregion
 
-            //使用applicationBuilder
-            IApplicationBuilder applicationBuilder = new IApplicationBuilder();
-            Startup startup = new Startup();
-            startup.Configure(applicationBuilder);
+            #region 模板方法
+            //目的：如果有共同的操作大流程，就可以放到父亲中， 提升代码的可维护性
+            //将日志存储到云上
+            //问题：如果我希望建立一个统一的标准，如果之后还有其他CloudServer来用
 
+            // ICloudServer cloudServer = new ESCloudServer();
+            // cloudServer.SaveLog();
+            
+            //再封一下，封装个工厂
+            ICloudServer cloudServer1 = CloudServerFactory.GetCloudServer("kusto");
+            cloudServer1.SaveLog();
+            
             #endregion
 
         }
