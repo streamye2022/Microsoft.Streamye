@@ -12,6 +12,14 @@ namespace Microsoft.Streamye.DesignPrinciples
     {
         static void Main(string[] args)
         {
+            #region 原始code
+
+            Console.WriteLine("选择商品");
+            Console.WriteLine("创建订单");
+            Console.WriteLine("扣减库存");
+            Console.WriteLine("创建支付");
+            
+            #endregion
 
             #region 面向过程案例 问题：1. 不关心具体的调用过程？ 2. 订单要做删除，更新，查询怎么办？ 
             //选择商品
@@ -24,6 +32,18 @@ namespace Microsoft.Streamye.DesignPrinciples
             CreatePay();
             #endregion
 
+            #region 面向过程案例 单一职责 问题： 1.我是一个调用者，我不想管这些复杂的东西，给我一个东西就OK
+            //选择商品
+            var product = new Product();
+            product.ChooseProduct();
+            //创建订单
+            var order = new Order();
+            order.CreateOrder();
+            //扣减库存
+            //创建支付
+           
+            #endregion
+            
             #region 迪米特法则, 知道的越少越好，对应到 facade模式, 黑盒, 单一职责原则
             // var eBusiness = new EBusiness();
             // eBusiness.BuyGoods();
@@ -51,8 +71,8 @@ namespace Microsoft.Streamye.DesignPrinciples
             // 给Ipay加一个功能，但是MS pay 不想提供这个功能
             #endregion
 
-            #region 接口隔离 ,定义的是一种行为规范
-            IPayCount payCount = new WXPay();
+            #region 接口隔离 ,定义的是一种行为规范, 只关心这种行为
+            IPayCount payCount = new WXPay(); //这个时候我只要Paycount这个功能，我不关心Pay
             payCount.PayCount();
             
             // 问题：再加一个功能，统计所有的pay的调用次数
